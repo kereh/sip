@@ -66,7 +66,7 @@ export default function Page() {
                 Berkunjung sebagai
               </span>
               <span className="text-base font-semibold underline underline-offset-4">
-                {user?.fullName || user?.primaryEmailAddress?.emailAddress}
+                {user?.fullName ?? user?.primaryEmailAddress?.emailAddress}
               </span>
             </div>
           )}
@@ -78,7 +78,7 @@ export default function Page() {
               onClick={() => {
                 mutate.mutate({
                   nama:
-                    user?.fullName! || user?.primaryEmailAddress?.emailAddress!,
+                    user?.fullName! ?? user?.primaryEmailAddress?.emailAddress!,
                 });
                 setStatus(true);
               }}

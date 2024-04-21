@@ -1,18 +1,31 @@
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
-import { RouterOutput } from "~/server/api/trpc";
+import { type ColumnDef } from "@tanstack/react-table";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuLabel,
   DropdownMenuItem,
-  DropdownMenuSeparator,
 } from "~/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "~/components/ui/alert-dialog";
+import { useToast } from "~/components/ui/use-toast";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, ArrowUpDown } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
+import { api } from "~/trpc/react";
+import { useRouter } from "next/navigation";
 
 type Data = {
   id: string;
@@ -34,7 +47,17 @@ export const columns: ColumnDef<Data>[] = [
   },
   {
     accessorKey: "rak.nama",
-    header: "Rak",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Rak Buku
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ row }) => {
       const rak = row.original.rak.nama;
       return <Badge variant="secondary">{rak}</Badge>;
@@ -42,11 +65,31 @@ export const columns: ColumnDef<Data>[] = [
   },
   {
     accessorKey: "nama",
-    header: "Nama",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Nama Buku
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "dipinjam",
-    header: "Status",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Status
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ row }) => {
       const status = row.original.dipinjam;
 
@@ -61,25 +104,78 @@ export const columns: ColumnDef<Data>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const payment = row.original;
+      const { toast } = useToast();
+      const router = useRouter();
+      const user = useUser();
+      const data = row.original;
+      const waktu = new Date().toLocaleDateString("id-ID", {
+        timeZone: "Asia/Makassar",
+      });
+      const mutate = api.buku.pinjam.useMutation({
+        onSuccess() {
+          router.refresh();
+          toast({
+            title: "Berhasil Dipinjam",
+            description: `Buku ${data.nama} berhasil dipinjam!`,
+          });
+        },
+      });
+      const pinjamBuku = () => {
+        if (data.dipinjam) {
+          return toast({
+            title: "Buku Tidak Tersedia",
+            description: `Saat ini Buku ${data.nama} tidak tersedia untuk dipinjam`,
+          });
+        }
+        mutate.mutate({
+          idBuku: row.original.id,
+          idUser: user.user?.id!,
+          namaBuku: row.original.nama,
+          waktu: waktu,
+        });
+      };
+
+      if (mutate.isPending)
+        return <span className="text-muted-foreground">memproses ...</span>;
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Menu</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Pinjam buku
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <AlertDialog>
+          <DropdownMenu>
+            {!mutate.isPending && (
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <span className="sr-only">Open menu</span>
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+            )}
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Menu</DropdownMenuLabel>
+              <DropdownMenuItem>
+                <AlertDialogTrigger>Pinjam Buku</AlertDialogTrigger>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="flex items-center gap-6">
+                <Badge>{data.nomor}</Badge>
+                <span>{data.nama}</span>
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                Apakah anda yakin untuk meminjam buku ini? Click lanjutkan untuk
+                meminjam buku <span className="font-semibold">{data.nama}</span>
+                .
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Batal</AlertDialogCancel>
+              <AlertDialogAction onClick={pinjamBuku}>
+                Lanjutkan
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       );
     },
   },

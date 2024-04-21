@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import NavbarMain from "~/components/navbars/navbar-main";
 
 export const metadata = {

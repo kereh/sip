@@ -1,4 +1,4 @@
-import { Dispatch } from "react";
+import type { Dispatch } from "react";
 import { Button } from "~/components/ui/button";
 import { XOctagon } from "lucide-react";
 

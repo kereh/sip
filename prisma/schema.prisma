@@ -26,11 +26,12 @@ model Buku {
 }
 
 model Peminjaman {
-    id     String  @id @default(cuid())
-    waktu  String
-    idBuku String
-    idUser String
-    status Boolean @default(false)
+    id       String  @id @default(cuid())
+    idBuku   String
+    idUser   String
+    waktu    String
+    namaBuku String
+    status   Boolean @default(false)
 }
 
 model Kunjungan {

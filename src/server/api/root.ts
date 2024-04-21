@@ -1,9 +1,7 @@
-import {
-  createCallerFactory,
-  createTRPCRouter,
-} from "~/server/api/trpc";
+import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 import { bukuRouter } from "~/server/api/routers/buku";
 import { kunjunganRouter } from "~/server/api/routers/kunjungan";
+import { rakRouter } from "./routers/rak";
 
 /**
  * This is the primary router for your server.
@@ -13,6 +11,7 @@ import { kunjunganRouter } from "~/server/api/routers/kunjungan";
 export const appRouter = createTRPCRouter({
   buku: bukuRouter,
   kunjungan: kunjunganRouter,
+  rak: rakRouter,
 });
 
 // export type definition of API
