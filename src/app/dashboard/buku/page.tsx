@@ -1,9 +1,21 @@
 import { api } from "~/trpc/server";
-import { columns } from "~/components/table/table-col";
+import { auth } from "@clerk/nextjs/server";
+import { columns } from "~/components/table/col-buku";
+import { MahasiswaAkses } from "~/components/akses/mahasiswa-component";
+
 import DataTable from "~/components/table/table-buku";
 import BukuLayout from "~/components/layouts/buku-layout";
 
 export default async function Page() {
+  // mahasiswa only
+  const { sessionClaims } = auth();
+  const role = sessionClaims?.metadata.role;
+
+  if (role === "admin") {
+    return <MahasiswaAkses />;
+  }
+  // end mahasiswa only
+
   const data = await api.buku.semua();
 
   return (

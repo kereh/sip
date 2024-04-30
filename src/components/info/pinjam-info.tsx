@@ -27,7 +27,7 @@ export default async function PinjamInfo() {
         <h1 className="text-4xl font-semibold">{jumlah ?? 0}</h1>
       </CardContent>
       <CardFooter className="text-sm text-muted-foreground">
-        Jumlah buku yang anda pinjam di perpustakaan.
+        * Jumlah buku yang anda pinjam di perpustakaan.
       </CardFooter>
     </Card>
   );

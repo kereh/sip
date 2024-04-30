@@ -1,4 +1,8 @@
-import { protectedProcedure, createTRPCRouter } from "~/server/api/trpc";
+import {
+  protectedProcedure,
+  createTRPCRouter,
+  adminProcedure,
+} from "~/server/api/trpc";
 import { z } from "zod";
 
 export const bukuRouter = createTRPCRouter({
@@ -77,5 +81,50 @@ export const bukuRouter = createTRPCRouter({
           },
         }),
       ]);
+    }),
+  tambah_buku: adminProcedure
+    .input(
+      z.object({
+        nomor: z.string(),
+        nama: z.string(),
+        idRak: z.string(),
+        dipinjam: z.boolean(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.buku.create({
+        data: {
+          nomor: input.nomor,
+          nama: input.nama,
+          idRak: input.idRak,
+          dipinjam: input.dipinjam,
+        },
+      });
+    }),
+  ubah_buku: adminProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        nomor: z.string(),
+        nama: z.string(),
+        idRak: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.buku.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          nomor: input.nomor,
+          nama: input.nama,
+          idRak: input.idRak,
+        },
+      });
+    }),
+  hapus_buku: adminProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.buku.delete({ where: { id: input.id } });
     }),
 });

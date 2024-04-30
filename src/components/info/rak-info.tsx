@@ -27,7 +27,7 @@ export default async function RakInfo() {
         <h1 className="text-4xl font-semibold">{jumlah ?? 0}</h1>
       </CardContent>
       <CardFooter className="text-sm text-muted-foreground">
-        Jumlah rak yang ada di perpustakaan.
+        * Jumlah rak yang ada di perpustakaan.
       </CardFooter>
     </Card>
   );

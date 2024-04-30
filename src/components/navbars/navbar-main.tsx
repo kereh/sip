@@ -15,7 +15,7 @@ export default function NavbarMain({ role }: Props) {
   const [open, setOpen] = useState<boolean>(false);
 
   return (
-    <nav className="fixed left-0 top-0 z-[100] w-full border-b bg-background">
+    <nav className="fixed left-0 top-0 z-10 w-full border-b bg-background/75 backdrop-blur">
       <div className="flex items-center justify-between px-6 py-4">
         <div className="flex items-center gap-4">
           <div className="text-lg font-semibold">SIP</div>
@@ -28,9 +28,11 @@ export default function NavbarMain({ role }: Props) {
             >
               <Button variant="link">Dashboard</Button>
             </Link>
-            <Link href="/dashboard/buku">
-              <Button variant="link">Buku</Button>
-            </Link>
+            {role !== "admin" && (
+              <Link href="/dashboard/buku">
+                <Button variant="link">Buku</Button>
+              </Link>
+            )}
           </div>
         </div>
         <div className="hidden items-center gap-x-4 md:flex">
@@ -43,7 +45,7 @@ export default function NavbarMain({ role }: Props) {
           </Button>
         </div>
       </div>
-      {open && <NavbarMobile open={open} setOpen={setOpen} />}
+      {open && <NavbarMobile role={role} open={open} setOpen={setOpen} />}
     </nav>
   );
 }

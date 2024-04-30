@@ -104,4 +104,13 @@ export const protectedProcedure = t.procedure.use(({ ctx, next }) => {
   });
 });
 
+export const adminProcedure = t.procedure.use(({ ctx, next }) => {
+  if (!ctx.auth.userId ?? ctx.auth.sessionClaims?.metadata.role !== "admin") {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+  return next({
+    ctx: { userId: ctx.auth.userId, auth: ctx.auth },
+  });
+});
+
 export type RouterOutput = inferRouterOutputs<AppRouter>;

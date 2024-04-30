@@ -135,9 +135,6 @@ export const columns: ColumnDef<Data>[] = [
         });
       };
 
-      if (mutate.isPending)
-        return <span className="text-muted-foreground">memproses ...</span>;
-
       return (
         <AlertDialog>
           <DropdownMenu>
@@ -158,7 +155,7 @@ export const columns: ColumnDef<Data>[] = [
           </DropdownMenu>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle className="flex items-center gap-6">
+              <AlertDialogTitle className="flex flex-col items-center gap-6 md:flex-row">
                 <Badge>{data.nomor}</Badge>
                 <span>{data.nama}</span>
               </AlertDialogTitle>

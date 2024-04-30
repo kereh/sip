@@ -1,19 +1,30 @@
 import { api } from "~/trpc/server";
-import { columns } from "~/components/table/table-col-pinjaman";
+import { auth } from "@clerk/nextjs/server";
+import { MahasiswaAkses } from "~/components/akses/mahasiswa-component";
+import { columns } from "~/components/table/col-pinjaman";
 
 import DashboardLayout from "~/components/layouts/dashboard-layout";
 import BukuInfo from "~/components/info/buku-info";
 import RakInfo from "~/components/info/rak-info";
 import PinjamInfo from "~/components/info/pinjam-info";
-import DataTable from "~/components/table/table-buku-pinjaman";
+import DataTable from "~/components/table/table-pinjaman";
 
 export default async function Page() {
+  // mahasiswa only
+  const { sessionClaims } = auth();
+  const role = sessionClaims?.metadata.role;
+
+  if (role === "admin") {
+    return <MahasiswaAkses />;
+  }
+  // end mahasiswa only
+
   const data = await api.buku.semua_dipinjam();
 
   return (
     <DashboardLayout>
-      <div className="my-10 w-full">
-        <div className="grid h-[90vh] grid-cols-1 place-content-center gap-4 md:h-[40vh] md:grid-cols-3">
+      <div className="my-5 w-full">
+        <div className="grid h-[85vh] grid-cols-1 place-content-center gap-10 md:h-[40vh] md:grid-cols-3">
           {/* buku */}
           <BukuInfo />
           {/* Rak */}

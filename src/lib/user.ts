@@ -1,13 +1,7 @@
-import { auth } from "@clerk/nextjs/server";
+import { useSession } from "@clerk/nextjs";
 
 export const isLogin = () => {
-  const { userId } = auth();
-  if (userId) return true;
-  return false;
-};
-
-export const isAdmin = () => {
-  const { sessionClaims } = auth();
-  if (sessionClaims?.metadata.role === "admin") return true;
+  const { session } = useSession();
+  if (session?.user.id) return true;
   return false;
 };

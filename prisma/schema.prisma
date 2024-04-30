@@ -20,7 +20,7 @@ model Buku {
     id       String  @id @default(cuid())
     nomor    String?
     nama     String
-    rak      Rak     @relation(references: [id], fields: [idRak])
+    rak      Rak     @relation(references: [id], fields: [idRak], onDelete: Cascade)
     idRak    String
     dipinjam Boolean @default(false)
 }

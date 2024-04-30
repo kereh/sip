@@ -1,11 +1,22 @@
+"use client";
+
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import { isLogin } from "~/lib/user";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import HomeLayout from "~/components/layouts/home-layout";
 
 export default function Page() {
+  const { user } = useUser();
   const session = isLogin();
+  const router = useRouter();
+  const role = user?.publicMetadata.role;
+
+  const navigate = () => {
+    console.log(role);
+  };
 
   return (
     <HomeLayout>
@@ -29,8 +40,16 @@ export default function Page() {
               peminjaman buku secara praktis dan efisien.
             </p>
             <div>
-              <Link href={session ? "/dashboard/mahasiswa" : "/auth/login"}>
-                <Button className="w-2/5">
+              <Link
+                href={
+                  !session
+                    ? "/auth/login"
+                    : role === "admin"
+                      ? "/dashboard/admin"
+                      : "/dashboard/mahasiswa"
+                }
+              >
+                <Button className="w-2/5" onClick={navigate}>
                   {!session ? "Login" : "Dashboard"}
                 </Button>
               </Link>
