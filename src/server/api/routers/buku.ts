@@ -63,10 +63,7 @@ export const bukuRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const [kembalikan, ubahStatus] = await ctx.db.$transaction([
-        ctx.db.peminjaman.update({
-          data: {
-            status: true,
-          },
+        ctx.db.peminjaman.delete({
           where: {
             id: input.idPeminjaman,
             idBuku: input.idBuku,
