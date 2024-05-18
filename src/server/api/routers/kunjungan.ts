@@ -16,4 +16,8 @@ export const kunjunganRouter = createTRPCRouter({
       });
       return simpan;
     }),
+  semua: protectedProcedure.query(async ({ ctx }) => {
+    const kunjungan = await ctx.db.kunjungan.findMany();
+    return { kunjungan };
+  }),
 });
