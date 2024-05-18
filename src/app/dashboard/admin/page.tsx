@@ -4,7 +4,6 @@ import { AdminAkses } from "~/components/akses/admin-component";
 import { columns as ColBuku } from "~/components/table/admin/col-buku";
 import { columns as ColRak } from "~/components/table/admin/col-rak";
 
-import BukuInfo from "~/components/info/buku-info";
 import DashboardLayout from "~/components/layouts/dashboard-layout";
 import DataTableBuku from "~/components/table/admin/table-buku";
 import DataTableRak from "~/components/table/admin/table-rak";

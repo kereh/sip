@@ -45,16 +45,22 @@ import { Badge } from "~/components/ui/badge";
 import { api } from "~/trpc/react";
 import { z } from "zod";
 
-type Data = {
+type Buku = {
   id: string;
-  nomor: string;
+  nomor: string | any;
   nama: string;
   idRak: string;
   dipinjam: boolean;
-  rak: { id: string; nama: string };
 };
 
-export const columns: ColumnDef<Data>[] = [
+type Data = {
+  rak: {
+    id: string;
+    nama: string;
+  };
+};
+
+export const columns: ColumnDef<Data & Buku>[] = [
   {
     accessorKey: "nomor",
     header: "No.",
@@ -152,7 +158,7 @@ export const columns: ColumnDef<Data>[] = [
 
       const formSchema = z.object({
         id: z.string(),
-        nomor: z.string().min(2),
+        nomor: z.string(),
         nama: z.string().min(2).max(50),
         idRak: z.string(),
       });

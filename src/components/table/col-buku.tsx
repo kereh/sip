@@ -1,6 +1,7 @@
 "use client";
 
 import { type ColumnDef } from "@tanstack/react-table";
+import { type RouterOutput } from "~/server/api/trpc";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -138,13 +139,15 @@ export const columns: ColumnDef<Data>[] = [
       return (
         <AlertDialog>
           <DropdownMenu>
-            {!mutate.isPending && (
+            {!mutate.isPending ? (
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="h-8 w-8 p-0">
                   <span className="sr-only">Open menu</span>
                   <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
+            ) : (
+              "mohon tunggu..."
             )}
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Menu</DropdownMenuLabel>
