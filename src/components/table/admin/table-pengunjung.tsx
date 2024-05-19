@@ -31,7 +31,6 @@ import {
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { ChevronDown } from "lucide-react";
-import DialogRak from "~/components/dialog/dialog-rak";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -79,7 +78,6 @@ export default function DataTablePengunjung<TData, TValue>({
           }
           className="max-w-sm"
         />
-        <DialogRak />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
