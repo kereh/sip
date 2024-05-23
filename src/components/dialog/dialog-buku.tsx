@@ -35,7 +35,7 @@ import { api } from "~/trpc/react";
 import { z } from "zod";
 
 export default function DialogBuku() {
-  const { data: rak } = api.rak.semua.useQuery();
+  const { data: rak, isLoading } = api.rak.semua.useQuery();
   const { toast } = useToast();
   const { refresh } = useRouter();
 
@@ -118,34 +118,38 @@ export default function DialogBuku() {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="idRak"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Rak buku</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="-- rak buku --" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {rak?.map((r) => (
-                        <SelectItem value={r.id} key={r.id}>
-                          {r.nama}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormDescription>Silahkan pilih rak buku</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {isLoading ? (
+              "memuat ..."
+            ) : (
+              <FormField
+                control={form.control}
+                name="idRak"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Rak buku</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="-- rak buku --" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {rak?.map((r) => (
+                          <SelectItem value={r.id} key={r.id}>
+                            {r.nama}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormDescription>Silahkan pilih rak buku</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
             <DialogFooter>
               <Button type="submit" disabled={mutate.isPending}>
                 Tambahkan
