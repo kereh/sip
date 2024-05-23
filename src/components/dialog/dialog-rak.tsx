@@ -44,11 +44,11 @@ export default function DialogRak() {
 
   const mutate = api.rak.tambah.useMutation({
     onSuccess: () => {
+      refresh();
       toast({
         title: "Berhasil",
         description: "Rak berhasil ditambahkan",
       });
-      refresh();
     },
   });
 

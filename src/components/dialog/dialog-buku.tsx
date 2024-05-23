@@ -58,11 +58,11 @@ export default function DialogBuku() {
 
   const mutate = api.buku.tambah_buku.useMutation({
     onSuccess: () => {
+      refresh();
       toast({
         title: "Berhasil",
         description: "Buku berhasil ditambahkan",
       });
-      refresh();
     },
   });
 
